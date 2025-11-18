@@ -1,7 +1,7 @@
 {
-  "name": "yunwei-sso-backend",
+  "name": "opshub-backend",
   "version": "1.0.0",
-  "description": "运维统一门户后端服务",
+  "description": "OpsHub运维统一门户后端服务",
   "main": "src/app.js",
   "type": "module",
   "scripts": {
@@ -9,7 +9,7 @@
     "dev": "nodemon src/app.js",
     "serve": "node src/app.js"
   },
-  "keywords": ["sso", "portal", "yunwei"],
+  "keywords": ["opshub", "portal", "operations"],
   "author": "",
   "license": "MIT",
   "dependencies": {

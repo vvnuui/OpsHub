@@ -1,4 +1,4 @@
-# 运维统一门户系统 (Yunwei SSO Portal)
+# OpsHub - 运维统一门户系统
 
 一个统一的运维系统导航门户，集成了多个运维系统的入口，提供便捷的系统访问和配置管理功能。
 
@@ -28,7 +28,7 @@
 ## 项目结构
 
 ```
-yunwei_sso/
+opshub/
 ├── frontend/                   # 前端项目
 │   ├── src/
 │   │   ├── views/             # 页面组件
@@ -125,7 +125,7 @@ npm start
 
 #### Ubuntu服务器部署（包含systemd配置）
 
-Ubuntu系统推荐使用专用部署脚本，**默认部署到 `/data/yunwei_sso`**：
+Ubuntu系统推荐使用专用部署脚本，**默认部署到 `/data/opshub`**：
 
 ```bash
 # 一键部署（自动配置systemd服务）
@@ -133,14 +133,14 @@ chmod +x deploy-ubuntu.sh
 ./deploy-ubuntu.sh
 
 # 部署时选择：
-# 1. 部署到 /data/yunwei_sso （推荐）⭐
+# 1. 部署到 /data/opshub （推荐）⭐
 # 2. 在当前目录部署
 # 3. 自定义路径
 
 # 服务管理
-sudo systemctl start yunwei-sso    # 启动
-sudo systemctl status yunwei-sso   # 状态
-journalctl -u yunwei-sso -f        # 日志
+sudo systemctl start opshub    # 启动
+sudo systemctl status opshub   # 状态
+journalctl -u opshub -f        # 日志
 ```
 
 **部署文档：**

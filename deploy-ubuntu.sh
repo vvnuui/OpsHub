@@ -1,11 +1,11 @@
 #!/bin/bash
-# 运维SSO系统 - Ubuntu部署脚本
+# OpsHub运维统一门户系统 - Ubuntu部署脚本
 # 支持Ubuntu 18.04/20.04/22.04
 
 set -e  # 遇到错误立即退出
 
 echo "========================================"
-echo "   运维统一门户系统 - Ubuntu部署"
+echo "   OpsHub - Ubuntu部署"
 echo "========================================"
 echo ""
 
@@ -28,10 +28,10 @@ fi
 
 # 确定项目目录
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DEPLOY_DIR="/data/yunwei_sso"
+DEPLOY_DIR="/data/opshub"
 
 echo -e "${YELLOW}选择部署方式:${NC}"
-echo "  1. 部署到 /data/yunwei_sso （推荐）"
+echo "  1. 部署到 /data/opshub （推荐）"
 echo "  2. 在当前目录部署 ($SCRIPT_DIR)"
 echo "  3. 自定义部署路径"
 echo ""
@@ -50,7 +50,7 @@ case $deploy_choice in
         PROJECT_DIR="$custom_path"
         ;;
     *)
-        echo -e "${YELLOW}无效选择，使用默认路径: /data/yunwei_sso${NC}"
+        echo -e "${YELLOW}无效选择，使用默认路径: /data/opshub${NC}"
         PROJECT_DIR="$DEPLOY_DIR"
         ;;
 esac
@@ -190,14 +190,14 @@ echo -e "${YELLOW}6. 配置系统服务...${NC}"
 read -p "   是否创建systemd服务（开机自启）? (y/n) " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    SERVICE_FILE="/etc/systemd/system/yunwei-sso.service"
+    SERVICE_FILE="/etc/systemd/system/opshub.service"
     USER_NAME=$(whoami)
 
     echo "   创建systemd服务文件..."
     sudo tee "$SERVICE_FILE" > /dev/null <<EOF
 [Unit]
-Description=Yunwei SSO Portal Service
-Documentation=https://github.com/your-repo/yunwei-sso
+Description=OpsHub Operations Portal Service
+Documentation=https://github.com/vvnuui/OpsHub
 After=network.target
 
 [Service]
@@ -209,7 +209,7 @@ Restart=on-failure
 RestartSec=10
 StandardOutput=journal
 StandardError=journal
-SyslogIdentifier=yunwei-sso
+SyslogIdentifier=opshub
 
 # 环境变量
 Environment=NODE_ENV=production
@@ -226,19 +226,19 @@ EOF
         sudo systemctl daemon-reload
 
         # 启用服务
-        sudo systemctl enable yunwei-sso
+        sudo systemctl enable opshub
         echo -e "${GREEN}   ✓ 服务已设置为开机自启${NC}"
 
         # 询问是否立即启动
         read -p "   是否立即启动服务? (y/n) " -n 1 -r
         echo
         if [[ $REPLY =~ ^[Yy]$ ]]; then
-            sudo systemctl start yunwei-sso
+            sudo systemctl start opshub
             sleep 2
-            if sudo systemctl is-active --quiet yunwei-sso; then
+            if sudo systemctl is-active --quiet opshub; then
                 echo -e "${GREEN}   ✓ 服务启动成功${NC}"
             else
-                echo -e "${RED}   ✗ 服务启动失败，请查看日志: journalctl -u yunwei-sso -f${NC}"
+                echo -e "${RED}   ✗ 服务启动失败，请查看日志: journalctl -u opshub -f${NC}"
             fi
         fi
     else
@@ -270,30 +270,30 @@ echo ""
 echo -e "${CYAN}启动方式:${NC}"
 echo ""
 
-if systemctl list-unit-files yunwei-sso.service &> /dev/null; then
+if systemctl list-unit-files opshub.service &> /dev/null; then
     echo -e "${YELLOW}方式1: 使用systemd服务${NC}"
-    echo "  sudo systemctl start yunwei-sso      # 启动服务"
-    echo "  sudo systemctl stop yunwei-sso       # 停止服务"
-    echo "  sudo systemctl restart yunwei-sso    # 重启服务"
-    echo "  sudo systemctl status yunwei-sso     # 查看状态"
-    echo "  journalctl -u yunwei-sso -f          # 查看日志"
+    echo "  sudo systemctl start opshub      # 启动服务"
+    echo "  sudo systemctl stop opshub       # 停止服务"
+    echo "  sudo systemctl restart opshub    # 重启服务"
+    echo "  sudo systemctl status opshub     # 查看状态"
+    echo "  journalctl -u opshub -f          # 查看日志"
     echo ""
 fi
 
 if command -v pm2 &> /dev/null; then
     echo -e "${YELLOW}方式2: 使用PM2${NC}"
     echo "  cd $PROJECT_DIR/backend"
-    echo "  pm2 start src/app.js --name yunwei-sso"
-    echo "  pm2 logs yunwei-sso                  # 查看日志"
-    echo "  pm2 restart yunwei-sso               # 重启"
-    echo "  pm2 stop yunwei-sso                  # 停止"
+    echo "  pm2 start src/app.js --name opshub"
+    echo "  pm2 logs opshub                  # 查看日志"
+    echo "  pm2 restart opshub               # 重启"
+    echo "  pm2 stop opshub                  # 停止"
     echo ""
 fi
 
 echo -e "${YELLOW}方式3: 直接启动${NC}"
 echo "  cd $PROJECT_DIR/backend"
 echo "  npm start                            # 前台运行"
-echo "  nohup npm start > yunwei-sso.log 2>&1 &  # 后台运行"
+echo "  nohup npm start > opshub.log 2>&1 &  # 后台运行"
 echo ""
 
 echo -e "${CYAN}访问地址:${NC}"
@@ -303,14 +303,14 @@ echo ""
 
 echo -e "${CYAN}目录结构:${NC}"
 echo "  配置文件: $PROJECT_DIR/backend/data/systems.json"
-echo "  日志文件: journalctl -u yunwei-sso -f"
-echo "  服务文件: /etc/systemd/system/yunwei-sso.service"
+echo "  日志文件: journalctl -u opshub -f"
+echo "  服务文件: /etc/systemd/system/opshub.service"
 echo ""
 
 echo -e "${CYAN}常用命令:${NC}"
 echo "  # 更新代码后重新构建"
 echo "  cd $PROJECT_DIR/frontend && npm run build"
-echo "  sudo systemctl restart yunwei-sso"
+echo "  sudo systemctl restart opshub"
 echo ""
 echo "  # 备份数据"
 echo "  cp $PROJECT_DIR/backend/data/systems.json ~/systems.json.backup"
