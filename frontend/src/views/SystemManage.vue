@@ -277,117 +277,91 @@ onMounted(() => {
 .manage-container {
   max-width: 1400px;
   margin: 0 auto;
-  animation: fadeIn 0.5s ease-in;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 28px;
-  padding: 28px 32px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  margin-bottom: 24px;
+  padding: 20px 24px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
 }
 
 .page-title {
-  font-size: 32px;
-  font-weight: 700;
+  font-size: 24px;
+  font-weight: 600;
   color: #1e293b;
   margin: 0;
   display: flex;
   align-items: center;
-  gap: 12px;
-  letter-spacing: -0.5px;
+  gap: 10px;
 }
 
 .title-icon {
-  font-size: 36px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-size: 28px;
+  color: #3b82f6;
 }
 
 .page-header :deep(.el-button) {
-  height: 42px;
-  padding: 0 24px;
-  border-radius: 12px;
-  font-weight: 600;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  height: 36px;
+  padding: 0 20px;
+  border-radius: 6px;
+  font-weight: 500;
+  background: #3b82f6;
   border: none;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-  transition: all 0.3s ease;
+  transition: background 0.2s ease;
 }
 
 .page-header :deep(.el-button:hover) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  background: #2563eb;
 }
 
 .systems-table {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
   overflow: hidden;
 }
 
 .systems-table :deep(.el-table__header-wrapper) {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+  background: #f8fafc;
 }
 
 .systems-table :deep(.el-table__header th) {
   background: transparent !important;
   color: #1e293b;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 14px;
-  padding: 16px 0;
+  padding: 14px 0;
 }
 
 .systems-table :deep(.el-table__row) {
-  transition: all 0.3s ease;
+  transition: background 0.2s ease;
 }
 
 .systems-table :deep(.el-table__row:hover) {
-  background: rgba(102, 126, 234, 0.05) !important;
+  background: #f8fafc !important;
 }
 
 .systems-table :deep(.el-table__body td) {
-  padding: 14px 0;
+  padding: 12px 0;
   color: #475569;
   font-size: 14px;
 }
 
 .systems-table :deep(.el-button.is-link) {
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.systems-table :deep(.el-button.is-link:hover) {
-  transform: translateX(2px);
+  font-weight: 500;
 }
 
 .icon-option {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-weight: 500;
 }
 
 .health-status {
@@ -395,9 +369,9 @@ onMounted(() => {
   align-items: center;
   gap: 6px;
   font-size: 13px;
-  padding: 6px 12px;
-  background: rgba(248, 250, 252, 0.6);
-  border-radius: 8px;
+  padding: 4px 8px;
+  background: #f8fafc;
+  border-radius: 4px;
   display: inline-flex;
 }
 
@@ -429,7 +403,7 @@ onMounted(() => {
 }
 
 .health-text {
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .health-text.health-online {
@@ -447,63 +421,58 @@ onMounted(() => {
 .response-time {
   color: #94a3b8;
   font-size: 12px;
-  font-weight: 500;
 }
 
 .manage-container :deep(.el-dialog) {
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 20px 60px rgba(102, 126, 234, 0.25);
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
 }
 
 .manage-container :deep(.el-dialog__header) {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 24px 32px;
+  background: #3b82f6;
+  padding: 20px 24px;
   margin: 0;
 }
 
 .manage-container :deep(.el-dialog__title) {
   color: white;
-  font-weight: 700;
-  font-size: 20px;
+  font-weight: 600;
+  font-size: 18px;
 }
 
 .manage-container :deep(.el-dialog__headerbtn .el-dialog__close) {
   color: white;
-  font-size: 20px;
 }
 
 .manage-container :deep(.el-dialog__body) {
-  padding: 32px;
+  padding: 24px;
 }
 
 .manage-container :deep(.el-dialog__footer) {
-  padding: 20px 32px 32px;
-  background: rgba(248, 250, 252, 0.5);
+  padding: 16px 24px;
+  background: #f8fafc;
 }
 
 .manage-container :deep(.el-form-item__label) {
-  font-weight: 600;
+  font-weight: 500;
   color: #1e293b;
 }
 
 .manage-container :deep(.el-input__wrapper) {
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  transition: all 0.3s ease;
+  border-radius: 6px;
+  transition: box-shadow 0.2s ease;
 }
 
 .manage-container :deep(.el-input__wrapper:hover) {
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+  box-shadow: 0 0 0 1px #cbd5e1;
 }
 
 .manage-container :deep(.el-input__wrapper.is-focus) {
-  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.25);
+  box-shadow: 0 0 0 1px #3b82f6;
 }
 
 .manage-container :deep(.el-textarea__inner) {
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border-radius: 6px;
 }
 
 .manage-container :deep(.el-select) {
@@ -511,9 +480,7 @@ onMounted(() => {
 }
 
 .manage-container :deep(.el-tag) {
-  border-radius: 8px;
-  font-weight: 600;
-  padding: 4px 12px;
-  border: none;
+  border-radius: 4px;
+  font-weight: 500;
 }
 </style>
