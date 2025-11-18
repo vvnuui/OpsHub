@@ -57,7 +57,7 @@ const handleMenuSelect = (index) => {
 <style scoped>
 #app {
   height: 100vh;
-  background: #f8fafc;
+  background: #f0f2f5;
 }
 
 .app-container {
@@ -66,11 +66,10 @@ const handleMenuSelect = (index) => {
 
 .app-header {
   background: #ffffff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   padding: 0;
   height: 64px !important;
   line-height: 64px;
-  border-bottom: 1px solid #e2e8f0;
 }
 
 .header-content {
@@ -78,7 +77,7 @@ const handleMenuSelect = (index) => {
   justify-content: space-between;
   align-items: center;
   height: 100%;
-  padding: 0 32px;
+  padding: 0 24px;
 }
 
 .logo {
@@ -86,27 +85,22 @@ const handleMenuSelect = (index) => {
   align-items: center;
   gap: 12px;
   cursor: pointer;
-  transition: opacity 0.2s ease;
-}
-
-.logo:hover {
-  opacity: 0.8;
 }
 
 .logo-icon-wrapper {
   width: 40px;
   height: 40px;
-  background: #3b82f6;
-  border-radius: 8px;
+  background: #1890ff;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  transition: background 0.2s ease;
+  transition: all 0.3s;
 }
 
 .logo:hover .logo-icon-wrapper {
-  background: #2563eb;
+  background: #40a9ff;
 }
 
 .logo-text {
@@ -117,15 +111,13 @@ const handleMenuSelect = (index) => {
 
 .title {
   font-size: 20px;
-  font-weight: 600;
-  color: #1e293b;
-  letter-spacing: -0.3px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.85);
 }
 
 .subtitle {
   font-size: 12px;
-  color: #64748b;
-  font-weight: 400;
+  color: rgba(0, 0, 0, 0.45);
   margin-top: 2px;
 }
 
@@ -135,27 +127,23 @@ const handleMenuSelect = (index) => {
 }
 
 .header-menu :deep(.el-menu-item) {
-  border-radius: 6px;
   margin: 0 4px;
-  transition: all 0.2s ease;
-  color: #64748b;
+  transition: all 0.3s;
+  color: rgba(0, 0, 0, 0.65);
 }
 
 .header-menu :deep(.el-menu-item:hover) {
-  background: #f1f5f9 !important;
-  color: #1e293b !important;
+  color: #1890ff !important;
 }
 
 .header-menu :deep(.el-menu-item.is-active) {
-  background: #3b82f6 !important;
-  color: white !important;
-  border-bottom: none !important;
+  color: #1890ff !important;
+  border-bottom: 2px solid #1890ff !important;
 }
 
 .app-main {
   padding: 24px;
   overflow-y: auto;
-  background: #f8fafc;
 }
 
 .app-main::-webkit-scrollbar {
@@ -167,12 +155,12 @@ const handleMenuSelect = (index) => {
 }
 
 .app-main::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: rgba(0, 0, 0, 0.15);
   border-radius: 3px;
 }
 
 .app-main::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: rgba(0, 0, 0, 0.25);
 }
 
 * {

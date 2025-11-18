@@ -111,9 +111,8 @@ onUnmounted(() => {
   margin-bottom: 24px;
   padding: 20px 24px;
   background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
 }
 
 .header-content {
@@ -121,61 +120,58 @@ onUnmounted(() => {
 }
 
 .page-title {
-  font-size: 24px;
-  font-weight: 600;
-  color: #1e293b;
+  font-size: 20px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.85);
   margin: 0 0 4px 0;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .title-icon {
-  font-size: 28px;
-  color: #3b82f6;
+  font-size: 24px;
+  color: #1890ff;
 }
 
 .page-subtitle {
   font-size: 14px;
-  color: #64748b;
+  color: rgba(0, 0, 0, 0.45);
   margin: 0;
-  font-weight: 400;
 }
 
 .page-header :deep(.el-button) {
-  height: 36px;
-  padding: 0 20px;
-  border-radius: 6px;
-  font-weight: 500;
-  background: #3b82f6;
+  height: 32px;
+  padding: 0 15px;
+  border-radius: 2px;
+  font-size: 14px;
+  background: #1890ff;
   border: none;
-  transition: background 0.2s ease;
+  transition: all 0.3s;
 }
 
 .page-header :deep(.el-button:hover) {
-  background: #2563eb;
+  background: #40a9ff;
 }
 
 .loading-container {
   padding: 60px;
   background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
 }
 
 .empty-container {
   padding: 80px 20px;
   background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
 }
 
 .systems-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
 }
 
 @media (max-width: 768px) {
@@ -188,11 +184,7 @@ onUnmounted(() => {
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
-    padding: 20px;
-  }
-
-  .page-title {
-    font-size: 22px;
+    padding: 16px;
   }
 }
 </style>

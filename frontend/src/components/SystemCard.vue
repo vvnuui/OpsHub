@@ -77,49 +77,42 @@ const handleClick = () => {
 <style scoped>
 .system-card {
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s;
   height: 100%;
   background: #ffffff;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border-radius: 2px;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
   overflow: hidden;
   position: relative;
 }
 
 .system-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .card-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 24px 20px;
+  padding: 24px;
   position: relative;
 }
 
 .icon-wrapper {
   margin-bottom: 16px;
-  padding: 18px;
-  background: #3b82f6;
-  border-radius: 10px;
-  transition: background 0.2s ease;
+  padding: 20px;
+  background: #e6f7ff;
+  border-radius: 4px;
+  transition: all 0.3s;
 }
 
 .system-card:hover .icon-wrapper {
-  background: #2563eb;
+  background: #bae7ff;
 }
 
 .system-icon {
-  color: white;
-  transition: transform 0.2s ease;
-}
-
-.system-card:hover .system-icon {
-  transform: scale(1.05);
+  color: #1890ff;
 }
 
 .system-info {
@@ -128,9 +121,9 @@ const handleClick = () => {
 }
 
 .system-name {
-  font-size: 18px;
-  font-weight: 600;
-  color: #1e293b;
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.85);
   margin-bottom: 8px;
   display: flex;
   align-items: center;
@@ -144,16 +137,16 @@ const handleClick = () => {
 }
 
 .health-indicator.health-online {
-  color: #10b981;
+  color: #52c41a;
   animation: pulse 2s ease-in-out infinite;
 }
 
 .health-indicator.health-offline {
-  color: #ef4444;
+  color: #f5222d;
 }
 
 .health-indicator.health-unknown {
-  color: #94a3b8;
+  color: rgba(0, 0, 0, 0.25);
 }
 
 @keyframes pulse {
@@ -167,7 +160,7 @@ const handleClick = () => {
 
 .system-desc {
   font-size: 14px;
-  color: #64748b;
+  color: rgba(0, 0, 0, 0.45);
   line-height: 1.5;
   margin: 0 0 12px 0;
   min-height: 42px;
@@ -179,54 +172,65 @@ const handleClick = () => {
   justify-content: center;
   gap: 8px;
   font-size: 12px;
-  padding: 6px 12px;
-  background: #f8fafc;
-  border-radius: 6px;
+  padding: 4px 12px;
+  background: #fafafa;
+  border-radius: 2px;
 }
 
 .health-text {
-  font-weight: 500;
+  font-weight: normal;
 }
 
 .health-text.health-online {
-  color: #10b981;
+  color: #52c41a;
 }
 
 .health-text.health-offline {
-  color: #ef4444;
+  color: #f5222d;
 }
 
 .health-text.health-unknown {
-  color: #64748b;
+  color: rgba(0, 0, 0, 0.45);
 }
 
 .response-time {
-  color: #94a3b8;
-  font-weight: 500;
+  color: rgba(0, 0, 0, 0.45);
 }
 
 .icon-wrapper.health-online {
-  background: #10b981;
+  background: #f6ffed;
 }
 
 .system-card:hover .icon-wrapper.health-online {
-  background: #059669;
+  background: #d9f7be;
+}
+
+.icon-wrapper.health-online .system-icon {
+  color: #52c41a;
 }
 
 .icon-wrapper.health-offline {
-  background: #ef4444;
+  background: #fff1f0;
 }
 
 .system-card:hover .icon-wrapper.health-offline {
-  background: #dc2626;
+  background: #ffccc7;
+}
+
+.icon-wrapper.health-offline .system-icon {
+  color: #f5222d;
 }
 
 .icon-wrapper.health-unknown {
-  background: #3b82f6;
+  background: #e6f7ff;
 }
 
 .system-card:hover .icon-wrapper.health-unknown {
-  background: #2563eb;
+  background: #bae7ff;
+}
+
+.icon-wrapper.health-unknown .system-icon {
+  color: #1890ff;
 }
 
 .status-badge {
@@ -236,9 +240,7 @@ const handleClick = () => {
 }
 
 .status-badge :deep(.el-tag) {
-  border-radius: 4px;
-  font-weight: 500;
-  padding: 2px 8px;
+  border-radius: 2px;
   font-size: 12px;
 }
 </style>
