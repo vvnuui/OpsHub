@@ -77,32 +77,87 @@ const handleClick = () => {
 <style scoped>
 .system-card {
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   height: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+  position: relative;
+}
+
+.system-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.system-card:hover::before {
+  opacity: 1;
 }
 
 .system-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 60px rgba(102, 126, 234, 0.25);
+  border-color: rgba(102, 126, 234, 0.3);
 }
 
 .card-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px 10px;
+  padding: 32px 24px;
   position: relative;
+  z-index: 1;
 }
 
 .icon-wrapper {
-  margin-bottom: 16px;
-  padding: 20px;
-  background: linear-gradient(135deg, #e6f4ff 0%, #bae0ff 100%);
-  border-radius: 12px;
+  margin-bottom: 20px;
+  padding: 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.icon-wrapper::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.system-card:hover .icon-wrapper::before {
+  opacity: 1;
+}
+
+.system-card:hover .icon-wrapper {
+  transform: rotateY(10deg) rotateX(5deg);
+  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.4);
 }
 
 .system-icon {
-  color: #1890ff;
+  color: white;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+  transition: transform 0.4s ease;
+}
+
+.system-card:hover .system-icon {
+  transform: scale(1.1) rotate(5deg);
 }
 
 .system-info {
@@ -111,104 +166,116 @@ const handleClick = () => {
 }
 
 .system-name {
-  font-size: 18px;
-  font-weight: 600;
-  color: #262626;
-  margin-bottom: 8px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 12px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  letter-spacing: -0.3px;
 }
 
 .health-indicator {
-  font-size: 12px;
+  font-size: 10px;
   line-height: 1;
 }
 
 .health-indicator.health-online {
-  color: #52c41a;
+  color: #10b981;
   animation: pulse 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.5));
 }
 
 .health-indicator.health-offline {
-  color: #ff4d4f;
+  color: #ef4444;
 }
 
 .health-indicator.health-unknown {
-  color: #d9d9d9;
+  color: #94a3b8;
 }
 
 @keyframes pulse {
   0%, 100% {
     opacity: 1;
+    transform: scale(1);
   }
   50% {
-    opacity: 0.5;
+    opacity: 0.6;
+    transform: scale(1.2);
   }
 }
 
 .system-desc {
   font-size: 14px;
-  color: #8c8c8c;
-  line-height: 1.5;
-  margin: 0 0 8px 0;
-  min-height: 42px;
+  color: #64748b;
+  line-height: 1.6;
+  margin: 0 0 16px 0;
+  min-height: 44px;
+  font-weight: 500;
 }
 
 .health-info {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
-  font-size: 12px;
+  font-size: 13px;
+  padding: 10px 16px;
+  background: rgba(248, 250, 252, 0.8);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
 }
 
 .health-text {
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .health-text.health-online {
-  color: #52c41a;
+  color: #10b981;
 }
 
 .health-text.health-offline {
-  color: #ff4d4f;
+  color: #ef4444;
 }
 
 .health-text.health-unknown {
-  color: #8c8c8c;
+  color: #64748b;
 }
 
 .response-time {
-  color: #8c8c8c;
+  color: #94a3b8;
+  font-weight: 600;
 }
 
 .icon-wrapper.health-online {
-  background: linear-gradient(135deg, #d9f7be 0%, #b7eb8f 100%);
-}
-
-.icon-wrapper.health-online .system-icon {
-  color: #52c41a;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.35);
 }
 
 .icon-wrapper.health-offline {
-  background: linear-gradient(135deg, #ffccc7 0%, #ffa39e 100%);
-}
-
-.icon-wrapper.health-offline .system-icon {
-  color: #ff4d4f;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  box-shadow: 0 8px 24px rgba(239, 68, 68, 0.35);
 }
 
 .icon-wrapper.health-unknown {
-  background: linear-gradient(135deg, #e6f4ff 0%, #bae0ff 100%);
-}
-
-.icon-wrapper.health-unknown .system-icon {
-  color: #1890ff;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
 }
 
 .status-badge {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 16px;
+  right: 16px;
+  z-index: 2;
+}
+
+.status-badge :deep(.el-tag) {
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 </style>

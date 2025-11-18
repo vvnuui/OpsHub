@@ -277,47 +277,128 @@ onMounted(() => {
 .manage-container {
   max-width: 1400px;
   margin: 0 auto;
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
+  padding: 28px 32px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .page-title {
-  font-size: 28px;
-  font-weight: 600;
-  color: #262626;
+  font-size: 32px;
+  font-weight: 700;
+  color: #1e293b;
   margin: 0;
   display: flex;
   align-items: center;
   gap: 12px;
+  letter-spacing: -0.5px;
 }
 
 .title-icon {
-  font-size: 32px;
-  color: #1890ff;
+  font-size: 36px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.page-header :deep(.el-button) {
+  height: 42px;
+  padding: 0 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+}
+
+.page-header :deep(.el-button:hover) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
 .systems-table {
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+}
+
+.systems-table :deep(.el-table__header-wrapper) {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+}
+
+.systems-table :deep(.el-table__header th) {
+  background: transparent !important;
+  color: #1e293b;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 16px 0;
+}
+
+.systems-table :deep(.el-table__row) {
+  transition: all 0.3s ease;
+}
+
+.systems-table :deep(.el-table__row:hover) {
+  background: rgba(102, 126, 234, 0.05) !important;
+}
+
+.systems-table :deep(.el-table__body td) {
+  padding: 14px 0;
+  color: #475569;
+  font-size: 14px;
+}
+
+.systems-table :deep(.el-button.is-link) {
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.systems-table :deep(.el-button.is-link:hover) {
+  transform: translateX(2px);
 }
 
 .icon-option {
   display: flex;
   align-items: center;
   gap: 8px;
+  font-weight: 500;
 }
 
 .health-status {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   font-size: 13px;
+  padding: 6px 12px;
+  background: rgba(248, 250, 252, 0.6);
+  border-radius: 8px;
+  display: inline-flex;
 }
 
 .health-dot {
@@ -326,31 +407,113 @@ onMounted(() => {
 }
 
 .health-dot.health-online {
-  color: #52c41a;
+  color: #10b981;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 .health-dot.health-offline {
-  color: #ff4d4f;
+  color: #ef4444;
 }
 
 .health-dot.health-unknown {
-  color: #d9d9d9;
+  color: #94a3b8;
+}
+
+.health-text {
+  font-weight: 600;
 }
 
 .health-text.health-online {
-  color: #52c41a;
+  color: #10b981;
 }
 
 .health-text.health-offline {
-  color: #ff4d4f;
+  color: #ef4444;
 }
 
 .health-text.health-unknown {
-  color: #8c8c8c;
+  color: #64748b;
 }
 
 .response-time {
-  color: #8c8c8c;
+  color: #94a3b8;
   font-size: 12px;
+  font-weight: 500;
+}
+
+.manage-container :deep(.el-dialog) {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(102, 126, 234, 0.25);
+}
+
+.manage-container :deep(.el-dialog__header) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 24px 32px;
+  margin: 0;
+}
+
+.manage-container :deep(.el-dialog__title) {
+  color: white;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.manage-container :deep(.el-dialog__headerbtn .el-dialog__close) {
+  color: white;
+  font-size: 20px;
+}
+
+.manage-container :deep(.el-dialog__body) {
+  padding: 32px;
+}
+
+.manage-container :deep(.el-dialog__footer) {
+  padding: 20px 32px 32px;
+  background: rgba(248, 250, 252, 0.5);
+}
+
+.manage-container :deep(.el-form-item__label) {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.manage-container :deep(.el-input__wrapper) {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+}
+
+.manage-container :deep(.el-input__wrapper:hover) {
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.manage-container :deep(.el-input__wrapper.is-focus) {
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.25);
+}
+
+.manage-container :deep(.el-textarea__inner) {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.manage-container :deep(.el-select) {
+  width: 100%;
+}
+
+.manage-container :deep(.el-tag) {
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border: none;
 }
 </style>
