@@ -8,6 +8,7 @@ import authRouter from './routes/auth.js';
 import userRouter from './routes/user.js';
 import oauthProviderRouter from './routes/oauthProvider.js';
 import auditLogRouter from './routes/auditLog.js';
+import ssoRouter from './routes/sso.js';
 import { startHealthCheck } from './services/healthCheck.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -38,6 +39,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/users', userRouter);
 app.use('/api/audit-logs', auditLogRouter); // 全局审计日志路由
 app.use('/api/oauth-providers', oauthProviderRouter); // OAuth提供商管理路由
+app.use('/api/sso', ssoRouter); // SSO 单点登录路由
 app.use('/api', systemRouter);
 
 // 健康检查
