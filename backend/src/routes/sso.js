@@ -5,7 +5,7 @@
 import express from 'express';
 import { authenticate } from '../middleware/auth.js';
 import { getDB, formatDateTimeForAPI } from '../db/database.js';
-import { generateToken } from '../utils/jwt.js';
+import { generateAccessToken } from '../utils/jwt.js';
 import { generateSSOUrl, parseSSORequest } from '../utils/ssoAuth.js';
 
 const router = express.Router();
@@ -170,7 +170,7 @@ router.get('/login', (req, res) => {
     db.prepare('UPDATE users SET last_login_time = ? WHERE id = ?').run(now, user.id);
 
     // 生成 JWT token
-    const token = generateToken({
+    const token = generateAccessToken({
       id: user.id,
       username: user.username,
       role: user.role,
