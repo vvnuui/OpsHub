@@ -1,9 +1,10 @@
 <template>
   <div id="app">
     <el-container class="app-container">
-      <el-header class="app-header">
+      <!-- 顶部导航栏（仅登录后显示） -->
+      <el-header v-if="authStore.isLoggedIn" class="app-header">
         <div class="header-content">
-          <div class="logo">
+          <div class="logo" @click="handleLogoClick">
             <div class="logo-icon-wrapper">
               <el-icon :size="32"><Platform /></el-icon>
             </div>
@@ -12,24 +13,64 @@
               <span class="subtitle">运维统一门户</span>
             </div>
           </div>
-          <el-menu
-            :default-active="activeMenu"
-            mode="horizontal"
-            @select="handleMenuSelect"
-            class="header-menu"
-          >
-            <el-menu-item index="/">
-              <el-icon><HomeFilled /></el-icon>
-              <span>系统导航</span>
-            </el-menu-item>
-            <el-menu-item index="/manage">
-              <el-icon><Setting /></el-icon>
-              <span>系统管理</span>
-            </el-menu-item>
-          </el-menu>
+
+          <div class="header-right">
+            <!-- 导航菜单 -->
+            <el-menu
+              :default-active="activeMenu"
+              mode="horizontal"
+              @select="handleMenuSelect"
+              class="header-menu"
+            >
+              <el-menu-item index="/">
+                <el-icon><HomeFilled /></el-icon>
+                <span>系统导航</span>
+              </el-menu-item>
+              <el-menu-item v-if="authStore.isAdmin" index="/manage">
+                <el-icon><Setting /></el-icon>
+                <span>系统管理</span>
+              </el-menu-item>
+              <el-menu-item v-if="authStore.isAdmin" index="/users">
+                <el-icon><User /></el-icon>
+                <span>用户管理</span>
+              </el-menu-item>
+              <el-menu-item v-if="authStore.isAdmin || authStore.isAuditor" index="/audit-logs">
+                <el-icon><Document /></el-icon>
+                <span>审计日志</span>
+              </el-menu-item>
+              <el-menu-item v-if="authStore.isAdmin" index="/oauth-config">
+                <el-icon><Key /></el-icon>
+                <span>OAuth配置</span>
+              </el-menu-item>
+            </el-menu>
+
+            <!-- 用户菜单 -->
+            <el-dropdown @command="handleUserCommand" class="user-dropdown">
+              <div class="user-info">
+                <el-avatar :size="36" class="user-avatar">
+                  {{ userInitial }}
+                </el-avatar>
+                <div class="user-details">
+                  <span class="username">{{ authStore.user?.username }}</span>
+                  <span class="user-role">{{ roleLabel }}</span>
+                </div>
+                <el-icon class="dropdown-icon"><ArrowDown /></el-icon>
+              </div>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item command="logout">
+                    <el-icon><SwitchButton /></el-icon>
+                    退出登录
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </div>
         </div>
       </el-header>
-      <el-main class="app-main">
+
+      <!-- 主内容区域 -->
+      <el-main class="app-main" :class="{ 'no-header': !authStore.isLoggedIn }">
         <router-view />
       </el-main>
     </el-container>
@@ -37,20 +78,85 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { Platform, HomeFilled, Setting } from '@element-plus/icons-vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { useAuthStore } from './stores/auth.js'
+import {
+  Platform,
+  HomeFilled,
+  Setting,
+  User,
+  SwitchButton,
+  ArrowDown,
+  Document,
+  Key
+} from '@element-plus/icons-vue'
 
 const router = useRouter()
 const route = useRoute()
+const authStore = useAuthStore()
 const activeMenu = ref(route.path)
 
 watch(() => route.path, (newPath) => {
   activeMenu.value = newPath
 })
 
+// 用户名首字母（用于头像显示）
+const userInitial = computed(() => {
+  const username = authStore.user?.username || ''
+  return username.charAt(0).toUpperCase()
+})
+
+// 角色标签
+const roleLabel = computed(() => {
+  const roleMap = {
+    'admin': '管理员',
+    'auditor': '审计员',
+    'user': '普通用户'
+  }
+  return roleMap[authStore.user?.role] || '用户'
+})
+
+// Logo点击事件
+const handleLogoClick = () => {
+  router.push('/')
+}
+
+// 菜单选择事件
 const handleMenuSelect = (index) => {
   router.push(index)
+}
+
+// 用户菜单命令处理
+const handleUserCommand = async (command) => {
+  if (command === 'logout') {
+    // 登出确认
+    try {
+      await ElMessageBox.confirm(
+        '确定要退出登录吗？',
+        '退出登录',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      )
+
+      // 执行登出
+      await authStore.logout()
+      ElMessage.success('已退出登录')
+
+      // 跳转到登录页
+      router.push('/login')
+    } catch (error) {
+      // 用户取消登出
+      if (error !== 'cancel') {
+        console.error('登出失败:', error)
+        ElMessage.error('登出失败')
+      }
+    }
+  }
 }
 </script>
 
@@ -89,6 +195,12 @@ const handleMenuSelect = (index) => {
   padding: 0 32px;
   max-width: 1400px;
   margin: 0 auto;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
 }
 
 .logo {
@@ -170,6 +282,60 @@ const handleMenuSelect = (index) => {
 .app-main {
   padding: 32px;
   overflow-y: auto;
+}
+
+.app-main.no-header {
+  padding: 0;
+}
+
+/* 用户下拉菜单 */
+.user-dropdown {
+  cursor: pointer;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.user-info:hover {
+  background: #f3e8ff;
+}
+
+.user-avatar {
+  background: linear-gradient(135deg, #b224ef 0%, #7579ff 100%);
+  color: white;
+  font-weight: 600;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+
+.username {
+  font-size: 14px;
+  font-weight: 500;
+  color: #0f172a;
+}
+
+.user-role {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.dropdown-icon {
+  color: #94a3b8;
+  transition: transform 0.2s;
+}
+
+.user-info:hover .dropdown-icon {
+  transform: translateY(2px);
 }
 
 .app-main::-webkit-scrollbar {

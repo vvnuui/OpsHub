@@ -2,8 +2,12 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { initDatabase } from './db/database.js';
+import { initDatabase, formatDateTimeForAPI } from './db/database.js';
 import systemRouter from './routes/system.js';
+import authRouter from './routes/auth.js';
+import userRouter from './routes/user.js';
+import oauthProviderRouter from './routes/oauthProvider.js';
+import auditLogRouter from './routes/auditLog.js';
 import { startHealthCheck } from './services/healthCheck.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -12,8 +16,8 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// 初始化数据库
-initDatabase();
+// 初始化数据库（异步）
+await initDatabase();
 
 // 启动健康检查服务
 startHealthCheck();
@@ -25,16 +29,20 @@ app.use(express.urlencoded({ extended: true })); // 解析URL编码的请求体
 
 // 日志中间件
 app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+  console.log(`${formatDateTimeForAPI(new Date())} - ${req.method} ${req.url}`);
   next();
 });
 
 // API路由
+app.use('/api/auth', authRouter);
+app.use('/api/users', userRouter);
+app.use('/api/audit-logs', auditLogRouter); // 全局审计日志路由
+app.use('/api/oauth-providers', oauthProviderRouter); // OAuth提供商管理路由
 app.use('/api', systemRouter);
 
 // 健康检查
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  res.json({ status: 'ok', timestamp: formatDateTimeForAPI(new Date()) });
 });
 
 // 静态文件服务（提供前端构建产物）

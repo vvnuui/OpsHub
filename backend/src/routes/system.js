@@ -1,11 +1,13 @@
 import express from 'express';
 import { systemsDB } from '../db/database.js';
 import { triggerHealthCheck } from '../services/healthCheck.js';
+import { authenticate } from '../middleware/auth.js';
+import { requireAdmin } from '../middleware/permission.js';
 
 const router = express.Router();
 
-// 获取所有系统
-router.get('/systems', (req, res) => {
+// 获取所有系统 - 所有登录用户可访问
+router.get('/systems', authenticate, (req, res) => {
   try {
     const systems = systemsDB.getAll();
     res.json({
@@ -23,8 +25,8 @@ router.get('/systems', (req, res) => {
   }
 });
 
-// 根据ID获取系统
-router.get('/systems/:id', (req, res) => {
+// 根据ID获取系统 - 所有登录用户可访问
+router.get('/systems/:id', authenticate, (req, res) => {
   try {
     const { id } = req.params;
     const system = systemsDB.getById(id);
@@ -51,8 +53,8 @@ router.get('/systems/:id', (req, res) => {
   }
 });
 
-// 创建新系统
-router.post('/systems', (req, res) => {
+// 创建新系统 - 仅管理员
+router.post('/systems', authenticate, requireAdmin, (req, res) => {
   try {
     const { name, url, icon, description, order_num, status } = req.body;
 
@@ -80,8 +82,8 @@ router.post('/systems', (req, res) => {
   }
 });
 
-// 更新系统
-router.put('/systems/:id', (req, res) => {
+// 更新系统 - 仅管理员
+router.put('/systems/:id', authenticate, requireAdmin, (req, res) => {
   try {
     const { id } = req.params;
     const { name, url, icon, description, order_num, status } = req.body;
@@ -116,8 +118,8 @@ router.put('/systems/:id', (req, res) => {
   }
 });
 
-// 删除系统
-router.delete('/systems/:id', (req, res) => {
+// 删除系统 - 仅管理员
+router.delete('/systems/:id', authenticate, requireAdmin, (req, res) => {
   try {
     const { id } = req.params;
     const changes = systemsDB.delete(id);
@@ -143,8 +145,8 @@ router.delete('/systems/:id', (req, res) => {
   }
 });
 
-// 手动触发健康检查
-router.post('/systems/health-check', async (req, res) => {
+// 手动触发健康检查 - 所有登录用户可访问
+router.post('/systems/health-check', authenticate, async (req, res) => {
   try {
     console.log('🔄 收到手动健康检查请求');
     const results = await triggerHealthCheck();

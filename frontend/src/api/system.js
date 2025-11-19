@@ -1,13 +1,22 @@
 import axios from 'axios'
+import { getToken } from '../utils/auth.js'
 
 const request = axios.create({
   baseURL: '/api',
   timeout: 10000
 })
 
-// 请求拦截器
+// 请求拦截器 - 自动添加认证令牌
 request.interceptors.request.use(
   config => {
+    // 获取存储的Token
+    const token = getToken()
+
+    // 如果有Token，添加到请求头
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+
     return config
   },
   error => {
@@ -53,3 +62,6 @@ export const systemAPI = {
     return request.delete(`/systems/${id}`)
   }
 }
+
+// 默认导出axios实例，供其他API文件使用
+export default request
