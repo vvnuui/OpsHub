@@ -1,45 +1,14 @@
 /**
  * 用户管理相关API
  */
-import axios from 'axios';
-import { getToken } from '../utils/auth.js';
-
-const request = axios.create({
-  baseURL: '/api/users',
-  timeout: 10000
-});
-
-// 请求拦截器 - 自动添加认证令牌
-request.interceptors.request.use(
-  config => {
-    const token = getToken();
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  error => {
-    return Promise.reject(error);
-  }
-);
-
-// 响应拦截器
-request.interceptors.response.use(
-  response => {
-    return response.data;
-  },
-  error => {
-    console.error('请求失败:', error);
-    return Promise.reject(error);
-  }
-);
+import request from '../utils/request.js';
 
 /**
  * 获取用户列表
  * @returns {Promise}
  */
 export function getUserList() {
-  return request.get('/');
+  return request.get('/users');
 }
 
 /**
@@ -48,7 +17,7 @@ export function getUserList() {
  * @returns {Promise}
  */
 export function getUserById(id) {
-  return request.get(`/${id}`);
+  return request.get(`/users/${id}`);
 }
 
 /**
@@ -57,7 +26,7 @@ export function getUserById(id) {
  * @returns {Promise}
  */
 export function createUser(data) {
-  return request.post('/', data);
+  return request.post('/users', data);
 }
 
 /**
@@ -67,7 +36,7 @@ export function createUser(data) {
  * @returns {Promise}
  */
 export function updateUser(id, data) {
-  return request.put(`/${id}`, data);
+  return request.put(`/users/${id}`, data);
 }
 
 /**
@@ -76,7 +45,7 @@ export function updateUser(id, data) {
  * @returns {Promise}
  */
 export function deleteUser(id) {
-  return request.delete(`/${id}`);
+  return request.delete(`/users/${id}`);
 }
 
 /**
@@ -85,7 +54,7 @@ export function deleteUser(id) {
  * @returns {Promise}
  */
 export function getUserSystems(id) {
-  return request.get(`/${id}/systems`);
+  return request.get(`/users/${id}/systems`);
 }
 
 /**
@@ -95,7 +64,7 @@ export function getUserSystems(id) {
  * @returns {Promise}
  */
 export function grantSystemAccess(id, systemIds) {
-  return request.post(`/${id}/systems`, { system_ids: systemIds });
+  return request.post(`/users/${id}/systems`, { system_ids: systemIds });
 }
 
 /**
@@ -105,7 +74,7 @@ export function grantSystemAccess(id, systemIds) {
  * @returns {Promise}
  */
 export function revokeSystemAccess(userId, systemId) {
-  return request.delete(`/${userId}/systems/${systemId}`);
+  return request.delete(`/users/${userId}/systems/${systemId}`);
 }
 
 /**
@@ -115,7 +84,7 @@ export function revokeSystemAccess(userId, systemId) {
  * @returns {Promise}
  */
 export function getUserAuditLogs(id, params = {}) {
-  return request.get(`/${id}/audit-logs`, { params });
+  return request.get(`/users/${id}/audit-logs`, { params });
 }
 
 export default {

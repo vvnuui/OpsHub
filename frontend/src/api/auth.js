@@ -1,23 +1,7 @@
 /**
  * 认证相关API
  */
-import axios from 'axios';
-
-// 创建axios实例
-const request = axios.create({
-  baseURL: '/api/auth',
-  timeout: 10000
-});
-
-// 响应拦截器
-request.interceptors.response.use(
-  response => {
-    return response.data;
-  },
-  error => {
-    return Promise.reject(error);
-  }
-);
+import request from '../utils/request.js';
 
 /**
  * 用户登录
@@ -25,7 +9,7 @@ request.interceptors.response.use(
  * @returns {Promise}
  */
 export function login(credentials) {
-  return request.post('/login', credentials);
+  return request.post('/auth/login', credentials);
 }
 
 /**
@@ -34,7 +18,7 @@ export function login(credentials) {
  * @returns {Promise}
  */
 export function logout(token) {
-  return request.post('/logout', {}, {
+  return request.post('/auth/logout', {}, {
     headers: {
       'Authorization': `Bearer ${token}`
     }
@@ -47,7 +31,7 @@ export function logout(token) {
  * @returns {Promise}
  */
 export function refreshToken(refreshToken) {
-  return request.post('/refresh', { refresh_token: refreshToken });
+  return request.post('/auth/refresh', { refresh_token: refreshToken });
 }
 
 /**
@@ -56,7 +40,7 @@ export function refreshToken(refreshToken) {
  * @returns {Promise}
  */
 export function getProfile(token) {
-  return request.get('/profile', {
+  return request.get('/auth/profile', {
     headers: {
       'Authorization': `Bearer ${token}`
     }
@@ -68,7 +52,7 @@ export function getProfile(token) {
  * @returns {Promise}
  */
 export function getOAuthProviders() {
-  return request.get('/oauth/providers');
+  return request.get('/auth/oauth/providers');
 }
 
 export default {
