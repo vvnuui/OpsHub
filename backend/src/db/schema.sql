@@ -38,22 +38,6 @@ CREATE TABLE IF NOT EXISTS users (
   updated_at INTEGER NOT NULL          -- Unix 时间戳（秒）
 );
 
--- OAuth 提供商配置表
-CREATE TABLE IF NOT EXISTS oauth_providers (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT UNIQUE NOT NULL,           -- 提供商名称，如 'enterprise-sso', 'google', 'github'
-  display_name TEXT NOT NULL,          -- 显示名称，如 '企业SSO', 'Google账号'
-  client_id TEXT NOT NULL,             -- OAuth客户端ID
-  client_secret TEXT NOT NULL,         -- OAuth客户端密钥
-  authorize_url TEXT NOT NULL,         -- 授权端点URL
-  token_url TEXT NOT NULL,             -- 令牌端点URL
-  user_info_url TEXT NOT NULL,         -- 用户信息端点URL
-  scope TEXT DEFAULT 'openid profile email',  -- 请求的权限范围
-  enabled INTEGER DEFAULT 1,           -- 是否启用: 1=启用, 0=禁用
-  created_at INTEGER NOT NULL,         -- Unix 时间戳（秒）
-  updated_at INTEGER NOT NULL          -- Unix 时间戳（秒）
-);
-
 -- 会话管理表
 CREATE TABLE IF NOT EXISTS sessions (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -98,9 +82,6 @@ CREATE TABLE IF NOT EXISTS audit_logs (
 CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
 CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
 CREATE INDEX IF NOT EXISTS idx_users_status ON users(status);
-
-CREATE INDEX IF NOT EXISTS idx_oauth_providers_name ON oauth_providers(name);
-CREATE INDEX IF NOT EXISTS idx_oauth_providers_enabled ON oauth_providers(enabled);
 
 CREATE INDEX IF NOT EXISTS idx_sessions_user_id ON sessions(user_id);
 CREATE INDEX IF NOT EXISTS idx_sessions_access_token ON sessions(access_token);

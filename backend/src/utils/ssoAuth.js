@@ -4,9 +4,9 @@
  */
 import crypto from 'crypto';
 
-// OA 系统的密钥配置（从 syn_login.php 获取）
-const SYS_KEY = 'vjDPXzvbQmI5GPv';
-const SALT = 'hWiqER1nLeAtQrN';
+// OA 系统的密钥配置（从环境变量读取，需要与 OA 系统保持一致）
+const SYS_KEY = process.env.SSO_SYS_KEY || 'vjDPXzvbQmI5GPv';
+const SALT = process.env.SSO_SALT || 'hWiqER1nLeAtQrN';
 
 /**
  * PHP sys_auth_old 算法的 Node.js 实现

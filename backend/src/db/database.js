@@ -7,12 +7,14 @@ import { hashPassword } from '../utils/password.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// 数据库文件路径
-const dbPath = path.join(__dirname, '../../data/opshub.db');
+// 数据库文件路径（从环境变量读取）
+const dbPath = process.env.DATABASE_PATH
+  ? path.resolve(process.cwd(), process.env.DATABASE_PATH)
+  : path.join(__dirname, '../../data/opshub.db');
 const schemaPath = path.join(__dirname, 'schema.sql');
 
-// 确保 data 目录存在
-const dataDir = path.join(__dirname, '../../data');
+// 确保数据库目录存在
+const dataDir = path.dirname(dbPath);
 if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir, { recursive: true });
 }
@@ -101,17 +103,20 @@ export async function initDatabase() {
     const userCount = database.prepare('SELECT COUNT(*) as count FROM users').get();
 
     if (userCount.count === 0) {
-      // 创建默认管理员账户
-      // 默认密码: admin123 (生产环境应该修改)
-      const hashedPassword = await hashPassword('admin123');
+      // 创建默认管理员账户（从环境变量读取配置）
+      const defaultUsername = process.env.DEFAULT_ADMIN_USERNAME || 'admin';
+      const defaultPassword = process.env.DEFAULT_ADMIN_PASSWORD || 'admin123';
+      const defaultEmail = process.env.DEFAULT_ADMIN_EMAIL || 'admin@opshub.local';
+
+      const hashedPassword = await hashPassword(defaultPassword);
 
       database.prepare(`
         INSERT INTO users (username, password, email, full_name, role, status, created_at, updated_at)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       `).run(
-        'admin',
+        defaultUsername,
         hashedPassword,
-        'admin@opshub.local',
+        defaultEmail,
         '系统管理员',
         'admin',
         'active',

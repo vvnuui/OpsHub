@@ -10,94 +10,60 @@
         <p class="logo-subtitle">运维统一门户</p>
       </div>
 
-      <el-tabs v-model="activeTab" class="login-tabs">
-        <!-- 账号密码登录 -->
-        <el-tab-pane label="账号登录" name="password">
-          <el-form
-            ref="loginFormRef"
-            :model="loginForm"
-            :rules="loginRules"
-            class="login-form"
-            @keyup.enter="handleLogin"
+      <!-- 账号密码登录 -->
+      <el-form
+        ref="loginFormRef"
+        :model="loginForm"
+        :rules="loginRules"
+        class="login-form"
+        @keyup.enter="handleLogin"
+      >
+        <el-form-item prop="username">
+          <el-input
+            v-model="loginForm.username"
+            placeholder="请输入用户名"
+            size="large"
+            clearable
           >
-            <el-form-item prop="username">
-              <el-input
-                v-model="loginForm.username"
-                placeholder="请输入用户名"
-                size="large"
-                clearable
-              >
-                <template #prefix>
-                  <el-icon><User /></el-icon>
-                </template>
-              </el-input>
-            </el-form-item>
+            <template #prefix>
+              <el-icon><User /></el-icon>
+            </template>
+          </el-input>
+        </el-form-item>
 
-            <el-form-item prop="password">
-              <el-input
-                v-model="loginForm.password"
-                type="password"
-                placeholder="请输入密码"
-                size="large"
-                show-password
-                clearable
-              >
-                <template #prefix>
-                  <el-icon><Lock /></el-icon>
-                </template>
-              </el-input>
-            </el-form-item>
+        <el-form-item prop="password">
+          <el-input
+            v-model="loginForm.password"
+            type="password"
+            placeholder="请输入密码"
+            size="large"
+            show-password
+            clearable
+          >
+            <template #prefix>
+              <el-icon><Lock /></el-icon>
+            </template>
+          </el-input>
+        </el-form-item>
 
-            <el-form-item>
-              <el-checkbox v-model="loginForm.remember">
-                记住登录状态（7天）
-              </el-checkbox>
-            </el-form-item>
+        <el-form-item>
+          <el-checkbox v-model="loginForm.remember">
+            记住登录状态（7天）
+          </el-checkbox>
+        </el-form-item>
 
-            <el-form-item>
-              <el-button
-                type="primary"
-                size="large"
-                :loading="loading"
-                class="login-button"
-                @click="handleLogin"
-              >
-                {{ loading ? '登录中...' : '登 录' }}
-              </el-button>
-            </el-form-item>
-          </el-form>
-        </el-tab-pane>
-
-        <!-- SSO登录 -->
-        <el-tab-pane label="SSO登录" name="sso">
-          <div class="sso-container">
-            <el-alert
-              v-if="oauthProviders.length === 0"
-              title="暂无可用的SSO提供商"
-              type="info"
-              center
-              :closable="false"
-            />
-
-            <div v-else class="sso-buttons">
-              <el-button
-                v-for="provider in oauthProviders"
-                :key="provider.id"
-                size="large"
-                class="sso-button"
-                @click="handleSSOLogin(provider.name)"
-              >
-                <el-icon><Connection /></el-icon>
-                {{ provider.display_name }}
-              </el-button>
-            </div>
-
-            <el-divider v-if="oauthProviders.length > 0">
-              <span class="divider-text">或使用账号密码登录</span>
-            </el-divider>
-          </div>
-        </el-tab-pane>
-      </el-tabs>
+        <el-form-item>
+          <el-button
+            type="primary"
+            size="large"
+            :loading="loading"
+            class="login-button"
+            @click="handleLogin"
+          >
+            {{ loading ? '登录中...' : '登 录' }}
+          </el-button>
+        </el-form-item>
+      </el-form>
 
       <div class="login-footer">
         <p>默认管理员账户: admin / admin123</p>
@@ -111,14 +77,10 @@ import { ref, reactive, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { useAuthStore } from '../stores/auth.js';
-import { getOAuthProviders } from '../api/auth.js';
 
 const router = useRouter();
 const route = useRoute();
 const authStore = useAuthStore();
-
-// 当前激活的标签页
-const activeTab = ref('password');
 
 // 登录表单
 const loginFormRef = ref(null);
@@ -142,9 +104,6 @@ const loginRules = {
 
 // 加载状态
 const loading = ref(false);
-
-// OAuth提供商列表
-const oauthProviders = ref([]);
 
 // 处理账号密码登录
 const handleLogin = async () => {
@@ -180,53 +139,12 @@ const handleLogin = async () => {
   }
 };
 
-// 处理SSO登录
-const handleSSOLogin = (providerName) => {
-  // 重定向到OAuth授权端点
-  window.location.href = `/api/auth/oauth/${providerName}`;
-};
-
-// 获取OAuth提供商列表
-const fetchOAuthProviders = async () => {
-  try {
-    const response = await getOAuthProviders();
-    if (response.code === 200) {
-      oauthProviders.value = response.data || [];
-    }
-  } catch (error) {
-    console.error('获取OAuth提供商列表失败:', error);
-  }
-};
-
-// 处理OAuth回调
-const handleOAuthCallback = () => {
-  const token = route.query.token;
-  const refreshToken = route.query.refresh_token;
-
-  if (token && refreshToken) {
-    // 保存令牌
-    authStore.handleOAuthCallback(token, refreshToken, true);
-
-    ElMessage.success('SSO登录成功');
-
-    // 清除URL参数并跳转到首页
-    router.replace('/');
-  }
-};
-
 // 组件挂载时
 onMounted(() => {
   // 如果已登录，直接跳转到首页
   if (authStore.isLoggedIn) {
     router.replace('/');
-    return;
   }
-
-  // 获取OAuth提供商列表
-  fetchOAuthProviders();
-
-  // 检查是否有OAuth回调参数
-  handleOAuthCallback();
 });
 </script>
 
@@ -290,7 +208,7 @@ onMounted(() => {
 
 /* 登录表单 */
 .login-form {
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 .login-button {
@@ -307,37 +225,6 @@ onMounted(() => {
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
-/* SSO容器 */
-.sso-container {
-  padding: 20px 0;
-  min-height: 200px;
-}
-
-.sso-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.sso-button {
-  width: 100%;
-  height: 48px;
-  font-size: 15px;
-  border: 2px solid #e0e0e0;
-}
-
-.sso-button:hover {
-  border-color: #667eea;
-  color: #667eea;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
-}
-
-.divider-text {
-  color: #999;
-  font-size: 13px;
-}
-
 /* 登录页脚 */
 .login-footer {
   margin-top: 20px;
@@ -348,24 +235,6 @@ onMounted(() => {
 
 .login-footer p {
   margin: 5px 0;
-}
-
-/* 标签页样式调整 */
-.login-tabs {
-  margin-top: 20px;
-}
-
-:deep(.el-tabs__item) {
-  font-size: 15px;
-  font-weight: 500;
-}
-
-:deep(.el-tabs__item.is-active) {
-  color: #667eea;
-}
-
-:deep(.el-tabs__active-bar) {
-  background-color: #667eea;
 }
 
 /* 响应式设计 */

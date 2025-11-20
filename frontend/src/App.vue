@@ -38,10 +38,6 @@
                 <el-icon><Document /></el-icon>
                 <span>审计日志</span>
               </el-menu-item>
-              <el-menu-item v-if="authStore.isAdmin" index="/oauth-config">
-                <el-icon><Key /></el-icon>
-                <span>OAuth配置</span>
-              </el-menu-item>
             </el-menu>
 
             <!-- 用户菜单 -->
@@ -89,8 +85,7 @@ import {
   User,
   SwitchButton,
   ArrowDown,
-  Document,
-  Key
+  Document
 } from '@element-plus/icons-vue'
 
 const router = useRouter()

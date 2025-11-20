@@ -4,7 +4,6 @@ import Home from '../views/Home.vue'
 import SystemManage from '../views/SystemManage.vue'
 import UserManage from '../views/UserManage.vue'
 import AuditLogs from '../views/AuditLogs.vue'
-import OAuthConfig from '../views/OAuthConfig.vue'
 import Login from '../views/Login.vue'
 
 const routes = [
@@ -54,16 +53,6 @@ const routes = [
       title: '审计日志',
       requiresAuth: true,
       roles: ['admin', 'auditor'] // 管理员和审计员可以访问
-    }
-  },
-  {
-    path: '/oauth-config',
-    name: 'OAuthConfig',
-    component: OAuthConfig,
-    meta: {
-      title: 'OAuth配置',
-      requiresAuth: true,
-      roles: ['admin'] // 只有管理员可以访问
     }
   }
 ]

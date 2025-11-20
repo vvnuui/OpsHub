@@ -166,18 +166,6 @@ export const useAuthStore = defineStore('auth', () => {
     }
   };
 
-  // 方法：处理OAuth登录回调
-  const handleOAuthCallback = (accessToken, refreshTokenParam, remember = false) => {
-    token.value = accessToken;
-    refreshToken.value = refreshTokenParam;
-
-    setToken(accessToken, remember);
-    setRefreshToken(refreshTokenParam, remember);
-
-    // 获取用户信息
-    fetchUserProfile();
-  };
-
   // 方法：检查登录状态
   const checkAuth = () => {
     const storedToken = getToken();
@@ -209,7 +197,6 @@ export const useAuthStore = defineStore('auth', () => {
     logout,
     refreshAccessToken,
     fetchUserProfile,
-    handleOAuthCallback,
     checkAuth
   };
 });

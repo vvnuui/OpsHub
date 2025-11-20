@@ -50,7 +50,7 @@ function logAudit(userId, username, action, resourceType, resourceId, details, r
  *
  * Body:
  * {
- *   "target_url": "https://www.zxmr168.com/api.php",
+ *   "target_url": "https://example.com/sso/login",
  *   "username": "admin"
  * }
  */
@@ -204,9 +204,9 @@ router.get('/login', (req, res) => {
     <p>正在跳转到系统首页...</p>
   </div>
   <script>
-    // 保存 token 到 localStorage
-    localStorage.setItem('token', '${token}');
-    localStorage.setItem('user', JSON.stringify({
+    // 保存 token 到 sessionStorage（与前端 auth 工具保持一致）
+    sessionStorage.setItem('opshub_token', '${token}');
+    sessionStorage.setItem('opshub_user', JSON.stringify({
       id: ${user.id},
       username: '${user.username}',
       role: '${user.role}',
@@ -226,35 +226,5 @@ router.get('/login', (req, res) => {
     res.status(500).send('ERR: 服务器内部错误');
   }
 });
-
-/**
- * GET /api/sso/test-encrypt
- * 测试加密功能（仅开发环境）
- */
-if (process.env.NODE_ENV === 'development') {
-  router.get('/test-encrypt', (req, res) => {
-    const { username } = req.query;
-
-    if (!username) {
-      return res.status(400).json({
-        code: 400,
-        message: '请提供 username 参数'
-      });
-    }
-
-    const userAgent = req.get('user-agent') || 'Mozilla/5.0';
-    const ssoUrl = generateSSOUrl('https://www.zxmr168.com/api.php', username, userAgent);
-
-    res.json({
-      code: 200,
-      message: '加密测试',
-      data: {
-        username,
-        sso_url: ssoUrl,
-        user_agent: userAgent
-      }
-    });
-  });
-}
 
 export default router;

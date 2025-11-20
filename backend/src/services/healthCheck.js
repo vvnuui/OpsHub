@@ -3,10 +3,10 @@ import http from 'http';
 import https from 'https';
 import { URL } from 'url';
 
-// 健康检查配置
+// 健康检查配置（从环境变量读取）
 const HEALTH_CHECK_CONFIG = {
-  timeout: 5000,        // 超时时间：5秒
-  interval: 30000,      // 检查间隔：30秒
+  timeout: parseInt(process.env.HEALTH_CHECK_TIMEOUT || '5000', 10),       // 超时时间（毫秒）
+  interval: parseInt(process.env.HEALTH_CHECK_INTERVAL || '30000', 10),    // 检查间隔（毫秒）
   userAgent: 'Yunwei-SSO-HealthChecker/1.0'
 };
 

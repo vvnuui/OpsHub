@@ -3,8 +3,8 @@
  */
 import bcrypt from 'bcryptjs';
 
-// bcrypt 加密成本因子（推荐10）
-const SALT_ROUNDS = 10;
+// bcrypt 加密轮数（从环境变量读取，推荐值：10-12）
+const SALT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || '10', 10);
 
 /**
  * 加密密码

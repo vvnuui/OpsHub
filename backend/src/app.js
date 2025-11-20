@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
@@ -6,7 +7,6 @@ import { initDatabase, formatDateTimeForAPI } from './db/database.js';
 import systemRouter from './routes/system.js';
 import authRouter from './routes/auth.js';
 import userRouter from './routes/user.js';
-import oauthProviderRouter from './routes/oauthProvider.js';
 import auditLogRouter from './routes/auditLog.js';
 import ssoRouter from './routes/sso.js';
 import { startHealthCheck } from './services/healthCheck.js';
@@ -15,7 +15,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = parseInt(process.env.PORT || '3000', 10);
 
 // 初始化数据库（异步）
 await initDatabase();
@@ -38,7 +38,6 @@ app.use((req, res, next) => {
 app.use('/api/auth', authRouter);
 app.use('/api/users', userRouter);
 app.use('/api/audit-logs', auditLogRouter); // 全局审计日志路由
-app.use('/api/oauth-providers', oauthProviderRouter); // OAuth提供商管理路由
 app.use('/api/sso', ssoRouter); // SSO 单点登录路由
 app.use('/api', systemRouter);
 
@@ -48,7 +47,7 @@ app.get('/health', (req, res) => {
 });
 
 // 静态文件服务（提供前端构建产物）
-const frontendDistPath = path.join(__dirname, '../../frontend/dist');
+const frontendDistPath = path.resolve(__dirname, process.env.FRONTEND_DIST_PATH || '../../frontend/dist');
 app.use(express.static(frontendDistPath));
 
 // SPA路由支持 - 所有非API请求都返回index.html

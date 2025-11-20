@@ -47,18 +47,9 @@ export function getProfile(token) {
   });
 }
 
-/**
- * 获取可用的OAuth提供商列表
- * @returns {Promise}
- */
-export function getOAuthProviders() {
-  return request.get('/auth/oauth/providers');
-}
-
 export default {
   login,
   logout,
   refreshToken,
-  getProfile,
-  getOAuthProviders
+  getProfile
 };

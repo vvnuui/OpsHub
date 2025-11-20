@@ -3,13 +3,17 @@
  */
 import jwt from 'jsonwebtoken';
 
-// JWT 密钥（生产环境应从环境变量读取）
+// JWT 密钥（从环境变量读取）
 const JWT_SECRET = process.env.JWT_SECRET || 'opshub-jwt-secret-key-change-in-production';
+
+// JWT 令牌过期时间（从环境变量读取，单位：秒）
+const ACCESS_TOKEN_EXPIRES_IN = parseInt(process.env.JWT_ACCESS_EXPIRES_IN || '7200', 10);    // 默认 2 小时
+const REFRESH_TOKEN_EXPIRES_IN = parseInt(process.env.JWT_REFRESH_EXPIRES_IN || '604800', 10); // 默认 7 天
 
 // JWT 令牌配置
 const JWT_CONFIG = {
-  accessTokenExpiry: '2h',      // 访问令牌有效期：2小时
-  refreshTokenExpiry: '7d'      // 刷新令牌有效期：7天
+  accessTokenExpiry: ACCESS_TOKEN_EXPIRES_IN,    // 访问令牌有效期（秒）
+  refreshTokenExpiry: REFRESH_TOKEN_EXPIRES_IN   // 刷新令牌有效期（秒）
 };
 
 /**
@@ -91,10 +95,8 @@ export function getTokenExpiry(tokenType = 'access') {
   const now = Math.floor(Date.now() / 1000);
 
   if (tokenType === 'refresh') {
-    // 7天 = 7 * 24 * 60 * 60 = 604800秒
-    return now + 604800;
+    return now + REFRESH_TOKEN_EXPIRES_IN;
   } else {
-    // 2小时 = 2 * 60 * 60 = 7200秒
-    return now + 7200;
+    return now + ACCESS_TOKEN_EXPIRES_IN;
   }
 }
