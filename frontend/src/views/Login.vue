@@ -64,10 +64,6 @@
           </el-button>
         </el-form-item>
       </el-form>
-
-      <div class="login-footer">
-        <p>默认管理员账户: admin / admin123</p>
-      </div>
     </div>
   </div>
 </template>
@@ -223,18 +219,6 @@ onMounted(() => {
   opacity: 0.9;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-}
-
-/* 登录页脚 */
-.login-footer {
-  margin-top: 20px;
-  text-align: center;
-  font-size: 13px;
-  color: #999;
-}
-
-.login-footer p {
-  margin: 5px 0;
 }
 
 /* 响应式设计 */
