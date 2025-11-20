@@ -5,7 +5,7 @@ import express from 'express';
 import { body, validationResult } from 'express-validator';
 import { hashPassword } from '../utils/password.js';
 import { authenticate } from '../middleware/auth.js';
-import { requireAdmin, requireAdminOrAuditor } from '../middleware/permission.js';
+import { requireAdmin, requireAdminOrAuditor, requireAdminUsername } from '../middleware/permission.js';
 import { getDB, formatDateTimeForAPI } from '../db/database.js';
 
 const router = express.Router();
@@ -46,9 +46,9 @@ function logAudit(userId, username, action, resourceType, resourceId, details, r
 
 /**
  * GET /api/users
- * 获取用户列表（仅管理员）
+ * 获取用户列表（仅admin用户）
  */
-router.get('/', authenticate, requireAdmin, (req, res) => {
+router.get('/', authenticate, requireAdminUsername, (req, res) => {
   try {
     const db = getDB();
     const users = db.prepare(`
@@ -82,9 +82,9 @@ router.get('/', authenticate, requireAdmin, (req, res) => {
 
 /**
  * GET /api/users/:id
- * 获取单个用户详情（仅管理员）
+ * 获取单个用户详情（仅admin用户）
  */
-router.get('/:id', authenticate, requireAdmin, (req, res) => {
+router.get('/:id', authenticate, requireAdminUsername, (req, res) => {
   try {
     const { id } = req.params;
     const db = getDB();
@@ -127,12 +127,12 @@ router.get('/:id', authenticate, requireAdmin, (req, res) => {
 
 /**
  * POST /api/users
- * 创建新用户（管理员）
+ * 创建新用户（仅admin用户）
  */
 router.post(
   '/',
   authenticate,
-  requireAdmin,
+  requireAdminUsername,
   [
     body('username').trim().notEmpty().withMessage('用户名不能为空')
       .isLength({ min: 2, max: 50 }).withMessage('用户名长度在 2 到 50 个字符'),
@@ -222,12 +222,12 @@ router.post(
 
 /**
  * PUT /api/users/:id
- * 更新用户信息（管理员）
+ * 更新用户信息（仅admin用户）
  */
 router.put(
   '/:id',
   authenticate,
-  requireAdmin,
+  requireAdminUsername,
   [
     body('username').optional().trim().notEmpty().withMessage('用户名不能为空')
       .isLength({ min: 2, max: 50 }).withMessage('用户名长度在 2 到 50 个字符'),
@@ -353,9 +353,9 @@ router.put(
 
 /**
  * DELETE /api/users/:id
- * 删除用户（管理员）
+ * 删除用户（仅admin用户）
  */
-router.delete('/:id', authenticate, requireAdmin, (req, res) => {
+router.delete('/:id', authenticate, requireAdminUsername, (req, res) => {
   try {
     const { id } = req.params;
     const db = getDB();
@@ -408,9 +408,9 @@ router.delete('/:id', authenticate, requireAdmin, (req, res) => {
 
 /**
  * GET /api/users/:id/systems
- * 获取用户已授权的系统列表（仅管理员）
+ * 获取用户已授权的系统列表（仅admin用户）
  */
-router.get('/:id/systems', authenticate, requireAdmin, (req, res) => {
+router.get('/:id/systems', authenticate, requireAdminUsername, (req, res) => {
   try {
     const { id } = req.params;
     const db = getDB();
@@ -480,12 +480,12 @@ router.get('/:id/systems', authenticate, requireAdmin, (req, res) => {
 
 /**
  * POST /api/users/:id/systems
- * 授权用户访问系统（管理员）
+ * 授权用户访问系统（仅admin用户）
  */
 router.post(
   '/:id/systems',
   authenticate,
-  requireAdmin,
+  requireAdminUsername,
   [
     body('system_ids').isArray({ min: 1 }).withMessage('system_ids 必须是非空数组')
   ],
@@ -567,9 +567,9 @@ router.post(
 
 /**
  * DELETE /api/users/:id/systems/:systemId
- * 撤销用户系统访问权限（管理员）
+ * 撤销用户系统访问权限（仅admin用户）
  */
-router.delete('/:id/systems/:systemId', authenticate, requireAdmin, (req, res) => {
+router.delete('/:id/systems/:systemId', authenticate, requireAdminUsername, (req, res) => {
   try {
     const { id, systemId } = req.params;
     const db = getDB();

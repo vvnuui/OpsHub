@@ -42,6 +42,10 @@ export const useAuthStore = defineStore('auth', () => {
     return userRole.value === 'user';
   });
 
+  const isAdminUser = computed(() => {
+    return user.value?.username === 'admin';
+  });
+
   // 方法：登录
   const login = async (credentials, remember = false) => {
     isLoading.value = true;
@@ -192,6 +196,7 @@ export const useAuthStore = defineStore('auth', () => {
     isAdmin,
     isAuditor,
     isUser,
+    isAdminUser,
     // 方法
     login,
     logout,

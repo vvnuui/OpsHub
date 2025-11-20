@@ -55,6 +55,36 @@ export function requireAdminOrAuditor(req, res, next) {
 }
 
 /**
+ * 验证用户名必须为admin的中间件
+ * 只允许用户名为admin的用户访问
+ */
+export function requireAdminUsername(req, res, next) {
+  try {
+    if (!req.user) {
+      return res.status(401).json({
+        code: 401,
+        message: '未登录或认证已过期'
+      });
+    }
+
+    if (req.user.username !== 'admin') {
+      return res.status(403).json({
+        code: 403,
+        message: '权限不足，只有admin用户可以访问'
+      });
+    }
+
+    next();
+  } catch (error) {
+    console.error('用户名验证中间件错误:', error);
+    return res.status(500).json({
+      code: 500,
+      message: '服务器内部错误'
+    });
+  }
+}
+
+/**
  * 检查用户是否可以访问指定资源
  * 例如：用户只能修改自己的信息，除非是管理员
  * @param {Function} resourceOwnerGetter - 获取资源拥有者ID的函数

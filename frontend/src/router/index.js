@@ -42,7 +42,7 @@ const routes = [
     meta: {
       title: '用户管理',
       requiresAuth: true,
-      roles: ['admin'] // 只有管理员可以访问
+      requireAdminUser: true // 只有用户名为admin的用户可以访问
     }
   },
   {
@@ -84,6 +84,15 @@ router.beforeEach((to, from, next) => {
           path: '/login',
           query: { redirect: to.fullPath } // 保存目标路径，登录后可以跳转回来
         })
+        return
+      }
+    }
+
+    // 检查是否需要admin用户名
+    if (to.meta.requireAdminUser) {
+      if (!authStore.isAdminUser) {
+        // 不是admin用户，返回首页
+        next({ path: '/' })
         return
       }
     }
