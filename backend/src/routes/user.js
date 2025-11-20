@@ -46,9 +46,9 @@ function logAudit(userId, username, action, resourceType, resourceId, details, r
 
 /**
  * GET /api/users
- * 获取用户列表（管理员和审计员）
+ * 获取用户列表（仅管理员）
  */
-router.get('/', authenticate, requireAdminOrAuditor, (req, res) => {
+router.get('/', authenticate, requireAdmin, (req, res) => {
   try {
     const db = getDB();
     const users = db.prepare(`
@@ -82,9 +82,9 @@ router.get('/', authenticate, requireAdminOrAuditor, (req, res) => {
 
 /**
  * GET /api/users/:id
- * 获取单个用户详情（管理员和审计员）
+ * 获取单个用户详情（仅管理员）
  */
-router.get('/:id', authenticate, requireAdminOrAuditor, (req, res) => {
+router.get('/:id', authenticate, requireAdmin, (req, res) => {
   try {
     const { id } = req.params;
     const db = getDB();
@@ -408,9 +408,9 @@ router.delete('/:id', authenticate, requireAdmin, (req, res) => {
 
 /**
  * GET /api/users/:id/systems
- * 获取用户已授权的系统列表（管理员和审计员）
+ * 获取用户已授权的系统列表（仅管理员）
  */
-router.get('/:id/systems', authenticate, requireAdminOrAuditor, (req, res) => {
+router.get('/:id/systems', authenticate, requireAdmin, (req, res) => {
   try {
     const { id } = req.params;
     const db = getDB();
