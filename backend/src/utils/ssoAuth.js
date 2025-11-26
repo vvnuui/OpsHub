@@ -41,34 +41,44 @@ export function sysAuthOld(string, operation = 'ENCODE', key = '', expiry = 0) {
     .update(runtoKey.substr(0, 16) + fixedKey.substr(0, 16) + runtoKey.substr(16) + fixedKey.substr(16))
     .digest('hex');
 
-  let processString = '';
   if (operation === 'ENCODE') {
     const expiryStr = (expiry ? expiry + Math.floor(Date.now() / 1000) : 0).toString().padStart(10, '0');
     const stringMd5 = crypto.createHash('md5').update(string + egisKeys).digest('hex').substr(0, 16);
-    processString = expiryStr + stringMd5 + string;
-  } else {
-    processString = Buffer.from(string.substr(keyLength), 'base64').toString('binary');
-  }
+    const processString = expiryStr + stringMd5 + string;
 
-  // XOR 加密/解密
-  let result = '';
-  for (let i = 0; i < processString.length; i++) {
-    result += String.fromCharCode(
-      processString.charCodeAt(i) ^ keys.charCodeAt(i % 32)
-    );
-  }
+    // XOR 加密
+    let result = '';
+    for (let i = 0; i < processString.length; i++) {
+      result += String.fromCharCode(
+        processString.charCodeAt(i) ^ keys.charCodeAt(i % 32)
+      );
+    }
 
-  if (operation === 'ENCODE') {
     return runtoKey + Buffer.from(result, 'binary').toString('base64').replace(/=/g, '');
   } else {
-    // 验证解密结果
-    const expiryTime = parseInt(result.substr(0, 10));
-    const hash = result.substr(10, 16);
-    const originalString = result.substr(26);
-    const verifyHash = crypto.createHash('md5').update(originalString + egisKeys).digest('hex').substr(0, 16);
+    // 解码 - 使用Buffer正确处理二进制数据
+    const base64Part = string.substr(keyLength);
+    const decodedBuffer = Buffer.from(base64Part, 'base64');
 
-    if ((expiryTime === 0 || expiryTime - Math.floor(Date.now() / 1000) > 0) && hash === verifyHash) {
-      return originalString;
+    // XOR 解密
+    const resultBuffer = Buffer.alloc(decodedBuffer.length);
+    for (let i = 0; i < decodedBuffer.length; i++) {
+      resultBuffer[i] = decodedBuffer[i] ^ keys.charCodeAt(i % 32);
+    }
+
+    // 提取各部分
+    const expiryPart = resultBuffer.slice(0, 10).toString('ascii');
+    const hashPart = resultBuffer.slice(10, 26).toString('ascii');
+    const originalBuffer = resultBuffer.slice(26);
+
+    const expiryTime = parseInt(expiryPart) || 0;
+    const verifyHash = crypto.createHash('md5')
+      .update(Buffer.concat([originalBuffer, Buffer.from(egisKeys)]))
+      .digest('hex').substr(0, 16);
+
+    if ((expiryTime === 0 || expiryTime - Math.floor(Date.now() / 1000) > 0) && hashPart === verifyHash) {
+      // 返回UTF-8解码的字符串
+      return originalBuffer.toString('utf8');
     } else {
       return '';
     }
@@ -125,6 +135,7 @@ export function generateSSOUrl(targetUrl, username, userAgent = 'Mozilla/5.0') {
 
 /**
  * 解析并验证 SSO 登录请求
+ * 注意：根据PHP的syn_login.php实现，auth验证使用的是加密后的用户名
  * @param {string} auth - 认证签名
  * @param {string} encryptedUsername - 加密的用户名
  * @param {string} userAgent - User-Agent 字符串
@@ -132,16 +143,21 @@ export function generateSSOUrl(targetUrl, username, userAgent = 'Mozilla/5.0') {
  */
 export function parseSSORequest(auth, encryptedUsername, userAgent) {
   try {
+    // 先验证auth签名（使用加密后的用户名，与PHP一致）
+    // PHP: $my_auth = md5(md5(SALT . $this->username . SYS_KEY) . $_SERVER['HTTP_USER_AGENT']);
+    // 其中 $this->username 是 $_GET['u']，即加密后的用户名
+    const step1 = crypto.createHash('md5').update(SALT + encryptedUsername + SYS_KEY).digest('hex');
+    const expectedAuth = crypto.createHash('md5').update(step1 + userAgent).digest('hex');
+
+    if (auth !== expectedAuth) {
+      return { success: false, error: 'auth认证失败' };
+    }
+
     // 解密用户名
     const username = sysAuthOld(encryptedUsername, 'DECODE', SYS_KEY);
 
     if (!username) {
       return { success: false, error: '用户解码失败' };
-    }
-
-    // 验证签名
-    if (!verifySSOAuth(auth, username, userAgent)) {
-      return { success: false, error: 'auth认证失败' };
     }
 
     return { success: true, username };
